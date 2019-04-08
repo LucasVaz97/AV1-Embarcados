@@ -69,14 +69,16 @@ void pin_toggle(Pio *pio, uint32_t mask);
 *  Handle Interrupcao botao 1
 */
 
-volatile int loops=-1;
+volatile double loops=-1;
+volatile double loops2=-1;
 volatile double distancia=0;
 volatile double velocidade=0;
 static void Button1_Handler(uint32_t id, uint32_t mask)
 {
 	loops = loops +1;
-	distancia = distancia+2*3.14159265*0.5*loops;
-	velocidade=(loops*2*3.14159265)/4;
+	loops2 =loops2+1;
+	distancia =(2*3.14159265*0.3*loops);
+	velocidade=((loops2*2*3.14159265*0.3)/4)*3.6;
 }
 
 /**
@@ -99,14 +101,14 @@ void TC1_Handler(void){
 	UNUSED(ul_dummy);
 	int someInt3 = segundos;
 	char str3[12];
-	sprintf(str3, "%d", someInt3);
+	sprintf(str3, "%02d", someInt3);
 	int someInt4 = minutos;
 	char str4[12];
-	sprintf(str4, "%d", someInt4);
+	sprintf(str4, "%02d", someInt4);
 	
 	int someInt5 = horas;
 	char str5[12];
-	sprintf(str5, "%d", someInt5);
+	sprintf(str5, "%02d", someInt5);
 	
 	
 	if (segundos>=60)
@@ -117,7 +119,6 @@ void TC1_Handler(void){
 		
 	}
 	if(minutos>=60){
-		configure_lcd();
 		horas=horas+1;
 		minutos=0;
 		
@@ -198,6 +199,7 @@ void RTC_Handler(void)
 				else{
 					sec= sec+4;
 					velocidade=0;
+					loops2=0;
 				}
 				if(min>=60){
 					min=0;
